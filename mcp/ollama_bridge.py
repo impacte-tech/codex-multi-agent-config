@@ -23,7 +23,7 @@ SERVER_NAME = "ollama-bridge"
 SERVER_VERSION = "1.0.0"
 PROTOCOL_VERSION = "2025-06-18"
 OLLAMA_API = os.environ.get("OLLAMA_HOST", "http://localhost:11434")
-DEFAULT_MODEL = "qwen3.5:4b"
+DEFAULT_MODEL = "gemma4:e4b"
 DEFAULT_TIMEOUT = 900
 CODEX_BIN = os.environ.get("OLLAMA_BRIDGE_CODEX", "codex")
 
@@ -112,6 +112,17 @@ def run_agent(args):
     if not os.path.isdir(cwd):
         return f"error: cwd does not exist: {cwd}", True
 
+    # Some models (e.g. gemma4) habitually pass `justification` on exec calls;
+    # Codex rejects that unless paired with sandbox_permissions, and escalation
+    # is unavailable in headless runs (approval policy is Never). Tell workers
+    # to issue plain exec calls instead.
+    worker_prompt = (
+        task + "\n\nExecution notes: you run headless with full access and no "
+        "approval prompts. Issue plain exec_command calls — do NOT pass "
+        "`justification` or `sandbox_permissions` arguments; escalation is "
+        "unavailable and never needed."
+    )
+
     available = list_ollama_models()
     if isinstance(available, str):
         return f"error: {available}", True
@@ -144,7 +155,7 @@ def run_agent(args):
             "model_provider=ollama",
             "-m",
             model,
-            task,
+            worker_prompt,
         ]
         log(
             f"dispatching model={model} cwd={cwd} sandbox={sandbox} timeout={timeout_sec}s"

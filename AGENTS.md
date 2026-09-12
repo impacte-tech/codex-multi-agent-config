@@ -25,10 +25,9 @@ Use it for:
 
 Model guidance (pass via `model`):
 
-- `qwen3.5:4b` — default; good balance for reads and small writes
-- `lfm2.5:8b` — stronger worker for implementation-style tasks
-- Larger local models for the hardest tasks (slower; avoid running several in
-  parallel)
+- `gemma4:e4b` — default; 8B worker with 128k context, good balance of quality and speed
+- `qwen3.5:4b` — lighter/faster option for simple reads
+- `lfm2.5:8b` — alternative strong worker for implementation-style tasks
 
 Rules:
 

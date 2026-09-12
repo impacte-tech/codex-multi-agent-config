@@ -32,6 +32,9 @@ Model guidance (pass via `model`):
 Rules:
 
 - One bounded task per call. Independent tasks: make parallel calls.
+- For parallel calls, use the SAME worker model for all of them: each
+  additional distinct model must load into VRAM and can evict the others,
+  thrashing performance.
 - Always pass a generous `timeout_sec` (600 or more): the first call after
   idle includes model load into VRAM, and GPU contention with other local
   workloads can slow workers down.

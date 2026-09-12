@@ -32,6 +32,9 @@ Model guidance (pass via `model`):
 Rules:
 
 - One bounded task per call. Independent tasks: make parallel calls.
+- Always pass a generous `timeout_sec` (600 or more): the first call after
+  idle includes model load into VRAM, and GPU contention with other local
+  workloads can slow workers down.
 - Keep noisy intermediate output (file dumps, logs, search results) inside the
   worker; only its final report returns to the main thread.
 - Do not delegate: planning, architecture decisions, user communication,

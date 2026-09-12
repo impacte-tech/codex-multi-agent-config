@@ -1,0 +1,19 @@
+# Add this block to your ~/.codex/config.toml
+# (install.sh does this for you and rewrites the path below to your real $HOME)
+
+# --- Local Ollama IO workers (free delegation via MCP bridge) ---
+[mcp_servers.ollama_bridge]
+command = "/usr/bin/python3"
+args = ["/home/YOURUSER/.codex/mcp/ollama_bridge.py"]
+tool_timeout_sec = 1800
+
+# Notes:
+# - `ollama` is a built-in reserved provider id in Codex; you do NOT need to
+#   define a [model_providers.ollama] section. The bridge passes
+#   `-c model_provider=ollama` to each headless worker instead.
+# - `tool_timeout_sec` matters: local workers can take minutes on their first
+#   call (model load into VRAM). Codex's default MCP tool timeout is far too
+#   short for that.
+# - Do NOT set `wire_api = "chat"` on custom providers — recent Codex versions
+#   reject it. Ollama's OpenAI-compatible server speaks the Responses API
+#   (/v1/responses), which is what Codex uses by default.

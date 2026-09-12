@@ -25,9 +25,8 @@ Use it for:
 
 Model guidance (pass via `model`):
 
-- `gemma4:e4b` — default; 8B worker with 128k context, good balance of quality and speed
-- `qwen3.5:4b` — lighter/faster option for simple reads
-- `lfm2.5:8b` — alternative strong worker for implementation-style tasks
+- `gemma4:e4b` — the local worker (8B, 128k context). It is the only local
+  model installed; omit `model` to use it.
 
 Rules:
 
